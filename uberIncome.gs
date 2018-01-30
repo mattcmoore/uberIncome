@@ -1,7 +1,53 @@
-var Spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
 var today = Utilities.formatDate(new Date(), "GMT-8", "MM/dd/yyyy");
 
+var weeklyEarnings = spreadsheet.getSheetByName('WEEKLY EARNINGS');
+
+var incomeStatement = spreadsheet.getSheetByName('INCOME STATEMENT');
+
+function formatDate(dateString, format, timezone )
+
+{
+  
+  if (timezone == null ) {timezone = "GMT-8";}
+  
+  return Utilities.formatDate(new Date(dateString), timezone, format); 
+
+}
+
+
+function updateIncomeStatement()
+
+{
+  
+  var newestMonth = incomeStatement.getRange('C1').getValue();
+ 
+  var newestMonthInt = formatDate(newestMonth+" 1 2018", "M");
+
+  var todayMonthInt = formatDate(today,"M")
+  
+  if (todayMonthInt > newestMonthInt) {
+      
+      incomeStatement.insertColumnsBefore(3,todayMonthInt-newestMonthInt)
+      
+      //update month names in row 1
+      
+      //update data
+      
+  }
+
+}
+
+
+
+function onOpen()
+
+{
+
+  updateIncomeStatement();
+
+}
 
 
 function UBERDATE(range,date,year)
@@ -20,7 +66,7 @@ function UBERDATE(range,date,year)
    
    if ( range[i] != "" && regexp.test(splitDate) ){ 
     
-        range[i] = [Utilities.formatDate(new Date( splitDate + " " + year),"GMT","M/d/yyyy")]; 
+        range[i] = [Utilities.formatDate(splitDate + " " + year,"GMT","M/d/yyyy")]; 
         
     }
   
@@ -46,7 +92,9 @@ function UBERWEEK(range)
         
         var date = new Date(range[i]);
                 
-        var weekDay = Utilities.formatDate(date, "GMT", "u"); var monthDay = Utilities.formatDate(date, "GMT", "d");  
+        var weekDay = Utilities.formatDate(date, "GMT", "u"); 
+        
+        var monthDay = Utilities.formatDate(date, "GMT", "d");  
         
         date.setDate(monthDay-weekDay+1);
         
@@ -87,3 +135,5 @@ function searchINDEX(value,index)
   }
        return arr[index];
 }
+
+
